@@ -524,6 +524,47 @@ section {
   margin-bottom: 24px;
 }
 
+.map-shell {
+  position: relative;
+}
+
+.map-interaction-gate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-xl);
+  background: rgba(246, 241, 232, 0.18);
+  touch-action: pan-y pinch-zoom;
+}
+
+.map-interaction-gate[hidden] {
+  display: none;
+}
+
+.map-interaction-gate.is-active {
+  inset: 12px 12px auto auto;
+  background: transparent;
+  max-width: calc(100% - 72px);
+}
+
+#map-toggle {
+  border: 0;
+  font: 700 0.9rem "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+#map-toggle:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 4px;
+}
+
+.location-map.is-locked,
+.location-map.is-locked * {
+  pointer-events: none !important;
+}
+
 .location-map {
   height: clamp(340px, 55vh, 500px);
   border: 1px solid var(--line);

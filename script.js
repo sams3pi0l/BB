@@ -175,6 +175,35 @@ let mapPromise;
 let selectionRequest = 0;
 const roomMarkers = [];
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const mapTouchMode = window.matchMedia("(any-pointer: coarse), (max-width: 760px)");
+const mapGate = document.querySelector(".map-interaction-gate");
+const mapToggle = document.querySelector("#map-toggle");
+let mapInteractionActive = false;
+
+function setMapInteraction(active) {
+  mapInteractionActive = mapTouchMode.matches && active;
+  const locked = mapTouchMode.matches && !mapInteractionActive;
+  mapElement.classList.toggle("is-locked", locked);
+  mapElement.inert = locked;
+  mapGate.hidden = !mapTouchMode.matches;
+  mapGate.classList.toggle("is-active", mapInteractionActive);
+  mapToggle.setAttribute("aria-pressed", String(mapInteractionActive));
+  mapToggle.textContent = mapInteractionActive ? "Termina esplorazione" : "Attiva la mappa";
+}
+
+mapToggle.addEventListener("click", () => setMapInteraction(!mapInteractionActive));
+mapTouchMode.addEventListener("change", () => setMapInteraction(false));
+mapElement.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && mapInteractionActive) {
+    setMapInteraction(false);
+    mapToggle.focus({ preventScroll: true });
+  }
+});
+const mapInteractionObserver = new IntersectionObserver((entries) => {
+  if (entries.some((entry) => !entry.isIntersecting)) setMapInteraction(false);
+});
+mapInteractionObserver.observe(mapElement);
+setMapInteraction(false);
 
 function loadMapAsset(tag, url, integrity) {
   return new Promise((resolve, reject) => {
@@ -293,6 +322,7 @@ async function showRoomOnMap(index) {
   document.querySelector("#dove-siamo").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth" });
   const map = await ensureMap();
   if (!map || request !== selectionRequest) return;
+  setMapInteraction(true);
   map.invalidateSize();
   map.setView(rooms[index].coordinates, 16, { animate: false });
   roomMarkers[index].openPopup();
