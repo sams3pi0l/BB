@@ -186,7 +186,12 @@
           <h2 id="location-title">Dove siamo</h2>
         </div>
         <p class="location-description">Scopri la posizione dei nostri alloggi tra Biella, Vigliano Biellese e Favaro e scegli quella più comoda per il tuo soggiorno.</p>
-        <div id="alloggi-map" class="location-map" role="region" aria-label="Mappa degli alloggi"></div>
+        <div class="map-shell">
+          <div id="alloggi-map" class="location-map" role="region" aria-label="Mappa degli alloggi"></div>
+          <div class="map-interaction-gate" hidden>
+            <button id="map-toggle" class="button button-primary" type="button" aria-controls="alloggi-map" aria-pressed="false">Attiva la mappa</button>
+          </div>
+        </div>
         <p id="map-status" class="map-status" role="status">La mappa si carica avvicinandoti a questa sezione.</p>
         <button id="map-retry" class="button button-secondary" type="button" hidden>Riprova a caricare la mappa</button>
         <noscript><p>Gli indirizzi sono disponibili nelle schede degli alloggi. Attiva JavaScript per consultare la mappa interattiva.</p></noscript>
